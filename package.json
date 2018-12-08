@@ -1,7 +1,7 @@
 {
   "name": "webpack4-typescript-boilerplate",
   "version": "1.0.0",
-  "description": "A Webpack4 boilerplate, with Typescript",
+  "description": "A Webpack4 boilerplate, with Typescript & TSLint",
   "main": "dist/main.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js --hot --progress --color --inline",
