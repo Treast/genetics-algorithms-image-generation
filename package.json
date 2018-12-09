@@ -1,7 +1,7 @@
 {
-  "name": "webpack4-typescript-boilerplate",
+  "name": "genetics-algorithms-image-generation",
   "version": "1.0.0",
-  "description": "A Webpack4 boilerplate, with Typescript & TSLint",
+  "description": "A image generation using genetics algorithm",
   "main": "dist/main.min.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.config.js --hot --progress --color --inline",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Treast/webpack4-typescript-boilerplate.git"
+    "url": "git+https://github.com/Treast/genetics-algorithms-image-generation.git"
   },
   "keywords": [
     "webpack",
@@ -22,9 +22,9 @@
   "author": "Vincent Riva <vincent.riva@outlook.fr>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Treast/webpack4-typescript-boilerplate/issues"
+    "url": "https://github.com/Treast/genetics-algorithms-image-generation/issues"
   },
-  "homepage": "https://github.com/Treast/webpack4-typescript-boilerplate#readme",
+  "homepage": "https://github.com/Treast/genetics-algorithms-image-generation#readme",
   "devDependencies": {
     "@types/bluebird": "^3.5.24",
     "@types/core-js": "^0.9.36",
