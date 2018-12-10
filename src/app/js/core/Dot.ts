@@ -19,18 +19,21 @@ export default class Dot {
   }
 
   computeFitness() {
-    const targetColor = Canvas.getPixelColor(this.position);
-    const difference = Color.difference(this.color, targetColor);
-    if(difference < 0.03) {
-      this.isPerfect = true;
-      this.fitness = 10;
-    } else {
-      this.fitness = 1/difference;
+    if (!this.isPerfect) {
+      const targetColor = Canvas.getPixelColor(this.position);
+      const difference = Color.difference(this.color, targetColor);
+      // console.log(`Diff: ${difference}: (${this.color.r},${this.color.g},${this.color.b}) -> (${targetColor.r},${targetColor.g},${targetColor.b})`);
+      if (difference === 0) {
+        this.isPerfect = true;
+        this.fitness = 10;
+      } else {
+        this.fitness = 1 / difference;
+      }
     }
   }
 
   mutate() {
-    const mutationRate = 0.01;
+    const mutationRate = 0.1;
 
     if (!this.isPerfect && Math.random() < mutationRate) {
       let r = this.color.r;

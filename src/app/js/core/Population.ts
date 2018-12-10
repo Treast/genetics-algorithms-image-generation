@@ -37,7 +37,6 @@ export default class Population {
       dot.computeFitness();
       sumFitness += dot.fitness;
     }
-    console.log(`${sumFitness / this.size}%`);
     this.sortDots();
     this.makeNewPopulation();
   }
@@ -49,19 +48,21 @@ export default class Population {
   }
 
   makeNewPopulation() {
-    let unperfectDots = this.dots.filter((dot) => {
+    const unperfectDots = this.dots.filter((dot) => {
       return !dot.isPerfect;
     });
-    let perfectDots = this.dots.filter((dot) => {
+    const perfectDots = this.dots.filter((dot) => {
       return dot.isPerfect;
     });
     document.querySelector('.representation span').innerHTML = `${(perfectDots.length / this.size * 100).toFixed(2)}`;
-    let dots: Dot[] = unperfectDots.slice(0, Math.floor(this.dots.length / 2));
-    const wrongDots = unperfectDots.slice(Math.floor(this.dots.length / 2));
+    let dots: Dot[] = unperfectDots.slice(0, Math.floor(unperfectDots.length / 2));
+    const wrongDots = unperfectDots.slice(Math.floor(unperfectDots.length / 2));
     const babiesDots: Dot[] = [];
     for (let i = 0; i < wrongDots.length; i += 2) {
-      if(wrongDots[i + 1]) {
-        const babyDots = this.makeCrossing(dots[i], dots[i + 1], wrongDots[i], wrongDots[i + 1]);
+      if (wrongDots[i + 1]) {
+        const parent = this.getRandomParent();
+        const parent1 = this.getRandomParent();
+        const babyDots = this.makeCrossing(parent, parent1, wrongDots[i], wrongDots[i + 1]);
         babiesDots.push(...babyDots);
       } else {
         babiesDots.push(wrongDots[i]);
@@ -71,7 +72,6 @@ export default class Population {
     dots = this.mutate(newDots);
     this.dots = dots;
     this.generation += 1;
-    console.log(`Génération n°${this.generation}`);
     document.querySelector('.generation span').innerHTML = `${this.generation}`;
   }
 
@@ -80,6 +80,22 @@ export default class Population {
       dot.mutate();
     }
     return dots;
+  }
+
+  getRandomParent(): Dot {
+    const inverseDots = this.dots;
+    inverseDots.sort((a, b) => {
+      return (a.fitness > b.fitness) ? 1 : -1;
+    });
+    const random = Math.random();
+    let sumFitness = 0;
+    for (const dot of inverseDots) {
+      sumFitness += dot.fitness;
+      if (random < sumFitness) {
+        return dot;
+      }
+    }
+    return null;
   }
 
   makeCrossing(dot1: Dot, dot2: Dot, wrongDot1: Dot, wrongDot2: Dot) {
