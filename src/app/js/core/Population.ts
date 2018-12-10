@@ -14,8 +14,10 @@ export default class Population {
   }
 
   createPopulation() {
-    for (let i = 0; i < 400; i += 8) {
-      for (let j = 0; j < 400; j += 8) {
+    const row = Math.sqrt(this.size);
+    const width = 400 / row;
+    for (let i = 0; i < 400; i += width) {
+      for (let j = 0; j < 400; j += width) {
         const position = new Vector2(i, j);
         const color = Color.random();
         this.dots.push(new Dot(position, color));
