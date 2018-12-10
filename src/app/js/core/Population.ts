@@ -55,13 +55,16 @@ export default class Population {
     let perfectDots = this.dots.filter((dot) => {
       return dot.isPerfect;
     });
+    document.querySelector('.representation span').innerHTML = `${(perfectDots.length / this.size * 100).toFixed(2)}`;
     let dots: Dot[] = unperfectDots.slice(0, Math.floor(this.dots.length / 2));
     const wrongDots = unperfectDots.slice(Math.floor(this.dots.length / 2));
     const babiesDots: Dot[] = [];
-    for (let i = 0; i < dots.length; i += 2) {
-      if(dots[i] && dots[i + 1] && wrongDots[i] && wrongDots[i + 1]) {
+    for (let i = 0; i < wrongDots.length; i += 2) {
+      if(wrongDots[i + 1]) {
         const babyDots = this.makeCrossing(dots[i], dots[i + 1], wrongDots[i], wrongDots[i + 1]);
         babiesDots.push(...babyDots);
+      } else {
+        babiesDots.push(wrongDots[i]);
       }
     }
     const newDots = [...perfectDots, ...dots, ...babiesDots];
@@ -69,6 +72,7 @@ export default class Population {
     this.dots = dots;
     this.generation += 1;
     console.log(`Génération n°${this.generation}`);
+    document.querySelector('.generation span').innerHTML = `${this.generation}`;
   }
 
   mutate(dots: Dot[]): Dot[] {

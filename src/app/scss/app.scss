@@ -10,3 +10,17 @@ canvas {
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
 }
+
+h1.generation {
+  position: absolute;
+  top: calc(50% - 250px);
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+h2.representation {
+  position: absolute;
+  top: calc(50% + 250px);
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}

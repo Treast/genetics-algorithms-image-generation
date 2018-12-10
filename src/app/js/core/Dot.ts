@@ -21,7 +21,7 @@ export default class Dot {
   computeFitness() {
     const targetColor = Canvas.getPixelColor(this.position);
     const difference = Color.difference(this.color, targetColor);
-    if(difference === 0) {
+    if(difference < 0.03) {
       this.isPerfect = true;
       this.fitness = 10;
     } else {
