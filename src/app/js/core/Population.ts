@@ -14,10 +14,12 @@ export default class Population {
   }
 
   createPopulation() {
-    for (let i = 0; i < this.size; i += 1) {
-      const position = Vector2.random(400, 400);
-      const color = Color.random();
-      this.dots.push(new Dot(position, color));
+    for (let i = 0; i < 400; i += 8) {
+      for (let j = 0; j < 400; j += 8) {
+        const position = new Vector2(i, j);
+        const color = Color.random();
+        this.dots.push(new Dot(position, color));
+      }
     }
   }
 
@@ -45,22 +47,30 @@ export default class Population {
   }
 
   makeNewPopulation() {
-    let dots: Dot[] = this.dots.slice(0, this.dots.length / 2);
-    let wrongDots = this.dots.slice(this.dots.length / 2);
-    let babiesDots: Dot[] = [];
+    let unperfectDots = this.dots.filter((dot) => {
+      return !dot.isPerfect;
+    });
+    let perfectDots = this.dots.filter((dot) => {
+      return dot.isPerfect;
+    });
+    let dots: Dot[] = unperfectDots.slice(0, Math.floor(this.dots.length / 2));
+    const wrongDots = unperfectDots.slice(Math.floor(this.dots.length / 2));
+    const babiesDots: Dot[] = [];
     for (let i = 0; i < dots.length; i += 2) {
-      const babyDots = this.makeCrossing(dots[i], dots[i + 1], wrongDots[i], wrongDots[i + 1]);
-      babiesDots.push(...babyDots);
+      if(dots[i] && dots[i + 1] && wrongDots[i] && wrongDots[i + 1]) {
+        const babyDots = this.makeCrossing(dots[i], dots[i + 1], wrongDots[i], wrongDots[i + 1]);
+        babiesDots.push(...babyDots);
+      }
     }
-    dots.push(...babiesDots);
-    dots = this.mutate(dots);
+    const newDots = [...perfectDots, ...dots, ...babiesDots];
+    dots = this.mutate(newDots);
     this.dots = dots;
     this.generation += 1;
     console.log(`Génération n°${this.generation}`);
   }
 
   mutate(dots: Dot[]): Dot[] {
-    for (let dot of this.dots) {
+    for (const dot of this.dots) {
       dot.mutate();
     }
     return dots;

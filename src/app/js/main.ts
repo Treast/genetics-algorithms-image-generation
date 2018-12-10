@@ -8,7 +8,7 @@ app.isReady().then(() => {
   Canvas.createElement();
   Canvas.setImage('/assets/images/Pikachu.jpg');
 
-  const population = new Population(8000);
+  const population = new Population(6400);
   population.createPopulation();
 
   function animate() {

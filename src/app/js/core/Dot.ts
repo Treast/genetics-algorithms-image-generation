@@ -6,30 +6,38 @@ export default class Dot {
   public readonly position: Vector2;
   public color: Color;
   public fitness: number;
+  public isPerfect: boolean;
 
   constructor(position: Vector2, color: Color) {
     this.position = position;
     this.color = color;
+    this.isPerfect = false;
   }
 
   render() {
-    Canvas.drawCircle(this.position, 3, this.color);
+    Canvas.drawCircle(this.position, 4, this.color);
   }
 
   computeFitness() {
     const targetColor = Canvas.getPixelColor(this.position);
-    this.fitness = 100 * (1 - Color.difference(this.color, targetColor));
+    const difference = Color.difference(this.color, targetColor);
+    if(difference === 0) {
+      this.isPerfect = true;
+      this.fitness = 10;
+    } else {
+      this.fitness = 1/difference;
+    }
   }
 
   mutate() {
     const mutationRate = 0.01;
 
-    if (Math.random() < mutationRate) {
+    if (!this.isPerfect && Math.random() < mutationRate) {
       let r = this.color.r;
       let g = this.color.g;
       let b = this.color.b;
       const randomColor = Color.random();
-      let indexColor = Math.floor(Math.random() * 3);
+      const indexColor = Math.floor(Math.random() * 3);
       switch (indexColor) {
         case 0:
           r = randomColor.r;
