@@ -27,12 +27,10 @@ export default class Color {
   }
 
   static difference(color1: Color, color2: Color): number {
-    let colorA = ((color1.r + color1.g + color1.b) / 255) / 3;
-    let colorB = ((color2.r + color2.g + color2.b) / 255) / 3;
+    const diffR = Math.abs(color1.r - color2.r) / 255;
+    const diffG = Math.abs(color1.g - color2.g) / 255;
+    const diffB = Math.abs(color1.b - color2.b) / 255;
 
-    colorA *= 100;
-    colorB *= 100;
-
-    return Math.abs(colorA - colorB);
+    return (diffR + diffG + diffB) * 100;
   }
 }

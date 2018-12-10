@@ -23,11 +23,11 @@ export default class Dot {
       const targetColor = Canvas.getPixelColor(this.position);
       const difference = Color.difference(this.color, targetColor);
       // console.log(`Diff: ${difference}: (${this.color.r},${this.color.g},${this.color.b}) -> (${targetColor.r},${targetColor.g},${targetColor.b})`);
-      if (difference === 0) {
+      if (difference <= 5) {
         this.isPerfect = true;
-        this.fitness = 10;
+        this.fitness = 1;
       } else {
-        this.fitness = 1 / difference;
+        this.fitness = 1 / (difference * difference);
       }
     }
   }
@@ -59,5 +59,9 @@ export default class Dot {
   static generate(position: Vector2, args: number[]): Dot {
     const color = new Color(args[0], args[1], args[2]);
     return new Dot(position, color);
+  }
+
+  copy(color: Color): Dot {
+    return new Dot(this.position, color);
   }
 }

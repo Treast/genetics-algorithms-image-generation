@@ -6,11 +6,13 @@ export default class Population {
   private readonly size: number;
   private generation: number;
   private dots: Dot[];
+  private sumFitness: number;
 
   constructor(size: number) {
     this.size = size;
     this.generation = 1;
     this.dots = [];
+    this.sumFitness = 0;
   }
 
   createPopulation() {
@@ -57,17 +59,19 @@ export default class Population {
     document.querySelector('.representation span').innerHTML = `${(perfectDots.length / this.size * 100).toFixed(2)}`;
     let dots: Dot[] = unperfectDots.slice(0, Math.floor(unperfectDots.length / 2));
     const wrongDots = unperfectDots.slice(Math.floor(unperfectDots.length / 2));
+
+    this.calculateFitness();
+
+    this.dots.sort((a, b) => {
+      return (a.fitness > b.fitness) ? 1 : -1;
+    });
+
     const babiesDots: Dot[] = [];
-    for (let i = 0; i < wrongDots.length; i += 2) {
-      if (wrongDots[i + 1]) {
-        const parent = this.getRandomParent();
-        const parent1 = this.getRandomParent();
-        const babyDots = this.makeCrossing(parent, parent1, wrongDots[i], wrongDots[i + 1]);
-        babiesDots.push(...babyDots);
-      } else {
-        babiesDots.push(wrongDots[i]);
-      }
+    for (let i = 0; i < wrongDots.length; i += 1) {
+      const babyDots = this.makeCrossing(wrongDots[i]);
+      babiesDots.push(babyDots);
     }
+
     const newDots = [...perfectDots, ...dots, ...babiesDots];
     dots = this.mutate(newDots);
     this.dots = dots;
@@ -82,14 +86,18 @@ export default class Population {
     return dots;
   }
 
+  calculateFitness() {
+    let fitness = 0;
+    for (const dot of this.dots) {
+      fitness += dot.fitness;
+    }
+    this.sumFitness = fitness;
+  }
+
   getRandomParent(): Dot {
-    const inverseDots = this.dots;
-    inverseDots.sort((a, b) => {
-      return (a.fitness > b.fitness) ? 1 : -1;
-    });
-    const random = Math.random();
+    const random = Math.random() * this.sumFitness;
     let sumFitness = 0;
-    for (const dot of inverseDots) {
+    for (const dot of this.dots) {
       sumFitness += dot.fitness;
       if (random < sumFitness) {
         return dot;
@@ -98,12 +106,8 @@ export default class Population {
     return null;
   }
 
-  makeCrossing(dot1: Dot, dot2: Dot, wrongDot1: Dot, wrongDot2: Dot) {
-    const genes1 = [dot1.color.r, dot1.color.g, dot1.color.b];
-    const genes2 = [dot2.color.r, dot2.color.g, dot2.color.b];
-    const pivot = Math.floor(Math.random() * (genes1.length - 1)) + 1;
-    const propertiesBaby1 = [...genes1.slice(0, pivot), ...genes2.slice(pivot)];
-    const propertiesBaby2 = [...genes2.slice(0, pivot), ...genes1.slice(pivot)];
-    return [Dot.generate(wrongDot1.position, propertiesBaby1), Dot.generate(wrongDot2.position, propertiesBaby2)];
+  makeCrossing(dot: Dot) {
+    const parent = this.getRandomParent();
+    return dot.copy(parent.color);
   }
 }
